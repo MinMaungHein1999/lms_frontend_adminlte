@@ -1,12 +1,11 @@
 <template>
-  <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1 v-if="title">
             <i :class="icon" v-if="icon"></i>
-            {{ title }}<
+            {{ title }}
           </h1>
         </div>
       </div>
@@ -14,7 +13,7 @@
   </section>
 </template>
 <script>
-export default{
+export default {
   props: {
     title: {
       type: String,
@@ -28,7 +27,8 @@ export default{
   beforeMount(){
     let title = this.$store.state.app.name;
     title = this.title ? `${this.title} | ${title}` : title;
-    this.$('title').html(title);
+    // eslint-disable-next-line no-undef
+    $('title').html(title);
   }
 }
 </script>
