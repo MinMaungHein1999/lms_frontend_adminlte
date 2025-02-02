@@ -19,9 +19,10 @@ const routes: Array<RouteRecordRaw> = [
         name: 'employee',
         component: EmployeeManagement
       },{
-        path: '/employeeEdit',
+        path: '/employeeEdit/:id',
         name: 'employeeEdit',
-        component: EditEmployee
+        component: EditEmployee,
+        props: true
       }
       , {
         path: '/about',

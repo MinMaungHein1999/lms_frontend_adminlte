@@ -33,8 +33,8 @@
                     <td>{{ employee.lastName }}</td>
                     <td>{{ employee.nrc }}</td>
                     <td>{{ employee.email }}</td>
-                    <td>{{ employee.phone }}</td>
-                    <td>{{ employee.role }}</td>
+                    <td>{{ employee.phoneNumber }}</td>
+                    <td>{{ employee.roleDto.roleType }}</td>
                     <td>{{ employee.address }}</td>
                     <td class="project-actions text-right">
                       <a class="btn btn-primary btn-sm mr-2" href="#">
@@ -42,11 +42,11 @@
                         </i>
                         View
                       </a>
-                      <a href="/employeeEdit" class="btn btn-info btn-sm mr-2">
+                      <router-link :to="`/employeeEdit/${employee.id}`" class="btn btn-info btn-sm mr-2">
                         <i class="fas fa-pencil-alt">
                         </i>
                         Edit
-                      </a>
+                      </router-link>
                       <a class="btn btn-danger btn-sm mr-2" href="#">
                         <i class="fas fa-trash">
                         </i>
