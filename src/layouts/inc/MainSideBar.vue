@@ -42,6 +42,9 @@
           <MainNavItem icon="fas fa-home" link="/">
             Home
           </MainNavItem>
+          <MainNavItem icon="fas fa-users" link="/employee">
+            Employee
+          </MainNavItem>
           <MainNavItem icon="fas fa-about" link="/about">
             About
           </MainNavItem>
