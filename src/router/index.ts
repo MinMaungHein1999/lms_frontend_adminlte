@@ -4,6 +4,8 @@ import MainLayout from '../layouts/MainLayout.vue'
 import LoginView from '../views/LoginView.vue'
 import UserListing from '../views/users/UserListing.vue'
 import UserProfile from '../views/users/UserProfile.vue'
+import UserForm from '../views/users/UserForm.vue'
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -20,9 +22,20 @@ const routes: Array<RouteRecordRaw> = [
         component: UserProfile,
         props: true
       }, {
+        path: '/users/edit/:id',
+        name: 'userEdit',
+        component: UserForm,
+        props: true
+      },
+      {
         path: '/users',
         name: 'users',
         component: UserListing
+      },
+      {
+        path: '/newUser',
+        name: 'newUser',
+        component: UserForm
       }
       , {
         path: '/about',

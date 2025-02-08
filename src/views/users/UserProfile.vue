@@ -6,7 +6,8 @@
       <div class="card card-primary card-outline">
         <div class="card-body box-profile">
           <div class="text-center">
-            <img class="profile-user-img img-fluid img-circle" src="/adminlte/dist/img/user4-128x128.jpg" alt="User profile picture">
+            <img class="profile-user-img img-fluid img-circle" src="/adminlte/dist/img/user4-128x128.jpg"
+              alt="User profile picture">
           </div>
 
           <h3 class="profile-username text-center">{{ user?.username }}</h3>
@@ -24,38 +25,45 @@
               <b>Address</b> <a class="float-right">{{ user?.address }}</a>
             </li>
           </ul>
-
-          <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+          <router-link :to="`/users/edit/${user?.id}`" class="btn btn-primary btn-block"><b>Edit</b>
+          </router-link>
+          <button type="button" @click="deleteUserAction" class="btn btn-block btn-danger">Delete</button>
         </div>
         <!-- /.card-body -->
       </div>
     </div>
   </common-content>
 </template>
-<script>
+<script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-export default {
-  setup() {
-    const route = useRoute();
-    const user = ref({
-      id: '',
-      username: '',
-      email: '',
-      address: '',
-      userRole: null
-    });
+import { useRoute, useRouter } from "vue-router";
 
-    const fetchUserById = async () => {
-      const userId = route.params.id;
-      const response = await axios.get(`http://localhost:8080/api/users/${userId}`)
-      user.value = response.data;
-    };
+const router = useRouter();
+const route = useRoute();
+const user = ref({
+  id: '',
+  username: '',
+  email: '',
+  address: '',
+  userRole: null
+});
 
-    onMounted(fetchUserById);
+const fetchUserById = async () => {
+  const userId = route.params.id;
+  const response = await axios.get(`http://localhost:8080/api/users/${userId}`)
+  user.value = response.data;
+};
 
-    return { user };
+const deleteUserAction = async () => {
+  if (confirm("Are you sure you want to delete this user?")) {
+    await axios.delete(`http://localhost:8080/api/users/${user.value.id}`)
+    alert("User deleted successfully!")
+    router.push("/users");
   }
 }
+
+onMounted(() => {
+  fetchUserById();
+});
 </script>

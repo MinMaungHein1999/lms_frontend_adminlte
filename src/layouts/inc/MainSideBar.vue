@@ -39,15 +39,15 @@
             data-widget="treeview" 
             role="menu" 
             data-accordion="false">
-          <MainNavItem icon="fas fa-home" link="/">
+          <MainSideItem icon="fas fa-home" link="/">
             Home
-          </MainNavItem>
-          <MainNavItem icon="fas fa-users" link="/users">
+          </MainSideItem>
+          <MainSideItem icon="fas fa-users" link="/users">
             Users
-          </MainNavItem>
-          <MainNavItem icon="fas fa-about" link="/about">
+          </MainSideItem>
+          <MainSideItem icon="fas fa-about" link="/about">
             About
-          </MainNavItem>
+          </MainSideItem>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -56,10 +56,10 @@
   </aside>
 </template>
 <script>
-import MainNavItem from './MainNavItem.vue';
+import MainSideItem from './MainSideItem.vue';
 export default{
   components: {
-    MainNavItem
+    MainSideItem
   }
 }
 </script>
