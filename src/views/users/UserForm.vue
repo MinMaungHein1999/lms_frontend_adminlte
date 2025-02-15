@@ -1,122 +1,142 @@
 <template>
-  <content-header :title="headerTitle"></content-header>
+
+  <ContentHeader :title="headerTitle"></ContentHeader>
+
   <common-content>
     <div class="container-fluid">
+
       <div class="row">
+
         <div class="col-md-6">
-          <!-- general form elements -->
+
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">{{ headerTitle }} Form</h3>
+              <h3 class="card-title">{{ headerTitle }}</h3>
             </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-            <form @submit.prevent="handleSubmit">
+
+
+            <form role="form" @submit.prevent="handleSubmit()">
+
               <div class="card-body">
+
                 <div class="form-group">
-                  <label for="exampleInputEmail1">UserName</label>
-                  <input type="text" class="form-control" v-model="user.username" id="exampleInputUserName"
-                    placeholder="Enter UserName">
+                  <label for="userInput">UserName</label>
+                  <input v-model="user.username" type="text" class="form-control" id="userInput"
+                    placeholder="Enter username" />
                 </div>
+
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="email" class="form-control" v-model="user.email" id="exampleInputEmail1"
-                    placeholder="Enter email">
+                  <label for="exampleInputEmail">Email address</label>
+                  <input v-model="user.email" type="email" class="form-control" id="exampleInputEmail"
+                    placeholder="Enter email" />
                 </div>
+
                 <div class="form-group">
                   <label>Select UserRole</label>
-                  <select class="form-control" v-model="user.userRole.id">
+
+                  <select class="form-control" :v-model="user.userRole?.id">
+
                     <option v-for="role in userRoles" :key="role.id" :value="role.id">
                       {{ role.name }}
                     </option>
                   </select>
                 </div>
+
                 <div class="form-group">
-                  <label for="exampleInputAddress">Address</label>
-                  <input type="address" class="form-control" v-model="user.address" id="exampleInputAddress"
-                    placeholder="Enter Address">
+                  <label for="address">Address</label>
+                  <input v-model="user.address" type="address" class="form-control" id="address"
+                    placeholder="Enter address" />
                 </div>
-                <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
+
               </div>
-              <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-primary">{{buttonTitle}}</button>
+                <button type="submit" class="btn btn-primary">{{ buttonTitle }}</button>
               </div>
+
             </form>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   </common-content>
 </template>
-<script setup>
-import axios from 'axios';
-import { computed, onMounted, ref } from 'vue';
-import { useRoute, useRouter } from "vue-router"
-const route = useRoute();
-const router = useRouter();
-const userRoles = ref([]);
 
-const isEditing = computed(()=>{
-  return !!route.params.id;
-});
+<script setup>
+import ContentHeader from '@/components/ContentHeader.vue';
+import axios from 'axios';
+import { useRoute, useRouter } from "vue-router"
+import { computed, onMounted, ref } from 'vue';
+
 
 const user = ref({
   id: '',
   username: '',
   email: '',
   address: '',
-  userRole:
-  {
+  userRole: {
     id: '',
     name: '',
     description: ''
   }
 });
-const buttonTitle = computed(()=>{
-  return isEditing.value ? 'Update' : 'Create';
+
+
+const isEditing = computed(() => {
+  return !!route.params.id
 });
-const headerTitle = computed(()=>{
-  return isEditing.value ? 'Edit User' : 'Create User';
+
+const userRoles = ref([]);
+const router = useRouter();
+const route = useRoute();
+
+const buttonTitle = computed(() => {
+  return isEditing.value ? "Update " : "Create"
 });
+
+const headerTitle = computed(() => {
+  return isEditing.value ? "Edit User" : "Create User"
+}
+);
+
 onMounted(() => {
-  if (isEditing.value) {
-    fetchUserById();
-  }
   fetchUserRoles();
+  if (isEditing.value) {
+    fetchUsersById();
+  }
 });
 
 const fetchUserRoles = async () => {
-  const response = await axios.get("http://localhost:8080/api/roles");
+  const response = await axios.get('http://localhost:8080/api/roles');
   userRoles.value = response.data;
 }
 
-const fetchUserById = async () => {
+const fetchUsersById = async () => {
   const userId = route.params.id;
   const response = await axios.get(`http://localhost:8080/api/users/${userId}`);
   user.value = response.data;
 }
 
-const handleSubmit = () =>{
+const updateUserAction = async () => {
+  await axios.put(`http://localhost:8080/api/users/${user.value.id}`, user.value);
+  router.push(`/users/${user.value.id}`)
+}
+
+const createUserAction = async () => {
+  const response = await axios.post(`http://localhost:8080/api/users`, user.value);
+  user.value = response.data;
+  router.push(`/users/${user.value.id}`)
+}
+
+const handleSubmit = () => {
   if(isEditing.value){
     updateUserAction();
   }else{
     createUserAction();
   }
-}
-
-const createUserAction = async () => {
-  const response = await axios.post(`http://localhost:8080/api/users`, user.value);
-  user.value = response.data
-  router.push(`/users/${user.value.id}`)
-}
-
-const updateUserAction = async () => {
-  await axios.put(`http://localhost:8080/api/users/${user.value.id}`, user.value);
-  router.push(`/users/${user.value.id}`)
 }
 </script>
