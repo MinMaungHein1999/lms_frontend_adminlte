@@ -1,6 +1,22 @@
 <template>
   <content-header title="User Listing"></content-header>
   <common-content>
+    <div class="container">
+      <form class="row g-2 align-items-center p-4" @submit.prevent="featchUsers">
+        <div class="col-3">
+          <input type="text" v-model="searchForm.email" class="form-control" placeholder="Enter Email">
+        </div>
+        <div class="col-3">
+          <input type="text" v-model="searchForm.username" class="form-control" placeholder="Entrer Username">
+        </div>
+        <div class="col-3">
+          <input type="text" v-model="searchForm.address" class="form-control" placeholder="Enter Address">
+        </div>
+        <div class="col-3 d-grid">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -19,7 +35,8 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th>Id</th>
+                      <th>No</th>
+                      <th>User Id</th>
                       <th>UserName</th>
                       <th>Email</th>
                       <th>Address</th>
@@ -48,7 +65,8 @@
               <div class="row">
                 <div class="col-sm-12 col-md-5">
                   <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
-                    Showing {{ ((currentPage - 1) * pageSize + 1) }} to {{ Math.min(currentPage*pageSize, totalRecords) }} of {{ totalRecords }}
+                    Showing {{ ((currentPage - 1) * pageSize + 1) }} to {{ Math.min(currentPage * pageSize, totalRecords)
+                    }} of {{ totalRecords }}
                     entries</div>
                 </div>
                 <div class="col-sm-12 col-md-7">
@@ -61,8 +79,9 @@
                       </li>
                       <li v-for="page in numberOfPages" :key="page" class="paginate_button page-item"
                         :class="{ active: currentPage === page }">
-                        <a href="#" @click="changePage(page)"
-                          aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">{{ page }}</a></li>
+                        <a href="#" @click="changePage(page)" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                          class="page-link">{{ page }}</a>
+                      </li>
                       <li class="paginate_button page-item next" :class="{ disabled: currentPage === numberOfPages }"
                         id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0"
                           @click="changePage(currentPage + 1)" class="page-link">Next</a>
@@ -86,11 +105,17 @@ const pageSize = ref(3);
 const numberOfPages = ref(0);
 const hasNextPage = ref(false);
 const totalRecords = ref(0);
+const searchForm = ref({
+  email: '',
+  username: '',
+  address: ''
+});
 
 const users = ref([]);
+
 const featchUsers = async () => {
-  const response = await axios.get(`http://localhost:8080/api/users?currentPage=${currentPage.value}&pageSize=${pageSize.value}&username=`);
-  numberOfPages.value = response.data.numberOfPages + 1
+  const response = await axios.post(`http://localhost:8080/api/users/search?currentPage=${currentPage.value}&pageSize=${pageSize.value}`, searchForm.value)
+  numberOfPages.value = response.data.numberOfPages
   hasNextPage.value = response.data.hasNextPage
   totalRecords.value = response.data.totalRecords;
   users.value = response.data.data;

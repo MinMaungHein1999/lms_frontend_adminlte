@@ -33,9 +33,7 @@
 
                 <div class="form-group">
                   <label>Select UserRole</label>
-
-                  <select class="form-control" :v-model="user.userRole?.id">
-
+                  <select class="form-control" :v-model="user.userRole.id">
                     <option v-for="role in userRoles" :key="role.id" :value="role.id">
                       {{ role.name }}
                     </option>
